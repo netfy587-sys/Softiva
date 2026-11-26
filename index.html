@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Softiva | Understanding Software, Safe Computing and Everyday Digital Skills</title>
+<meta name="description" content="Softiva is an independent reading space about software: how apps and operating systems work, how software is made, and simple habits for safer, smoother everyday computing.">
+
+<!-- Google AdSense / Google Ads script: paste your site code here (inside head) -->
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ink:#0E1A33;
+  --blue:#2B5CE6;
+  --blue-d:#1F46B8;
+  --cyan:#19B5C9;
+  --bg:#F4F6FB;
+  --white:#FFFFFF;
+  --text:#1E2A44;
+  --muted:#5C6985;
+  --line:#DDE3F0;
+  --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--white);color:var(--text);line-height:1.75;font-size:17px;width:100%;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:var(--blue-d)}
+a:focus-visible,summary:focus-visible,.btn:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+h1,h2,h3{font-family:'Sora',system-ui,sans-serif;font-weight:600;line-height:1.18;color:var(--ink);letter-spacing:-.02em}
+.wrap{width:100%;max-width:1200px;margin:0 auto;padding:0 28px}
+.narrow{max-width:780px}
+
+/* header */
+header{background:var(--white);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
+.bar{display:flex;align-items:center;justify-content:space-between;height:72px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}
+.brand span{font-family:'Sora',sans-serif;font-weight:700;font-size:1.5rem;letter-spacing:-.03em}
+nav ul{display:flex;gap:30px;list-style:none}
+nav a{color:var(--muted);text-decoration:none;font-weight:500;font-size:.94rem}
+nav a:hover{color:var(--blue)}
+
+/* hero */
+.hero{background:linear-gradient(180deg,var(--bg) 0%,var(--white) 100%);padding:72px 0 60px}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}
+.hero h1{font-size:clamp(2.5rem,5vw,4rem);margin-bottom:22px}
+.hero h1 em{font-style:normal;color:var(--blue)}
+.hero p{color:var(--muted);font-size:1.12rem;max-width:540px;margin-bottom:32px}
+.btn{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;padding:15px 30px;border-radius:10px;font-weight:600;transition:background .2s}
+.btn:hover{background:var(--blue-d)}
+.btn.out{background:transparent;color:var(--ink);border:1.5px solid var(--ink);margin-left:12px}
+.btn.out:hover{background:var(--ink);color:#fff}
+
+/* window mock */
+.win{background:var(--white);border:1px solid var(--line);border-radius:14px;box-shadow:0 24px 60px rgba(14,26,51,.14);overflow:hidden}
+.win-bar{display:flex;align-items:center;gap:8px;padding:13px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
+.win-bar i{width:11px;height:11px;border-radius:50%;background:#D5DBEA;display:block}
+.win-bar span{margin-left:10px;font-size:.82rem;color:var(--muted)}
+.win img{width:100%;height:250px;object-fit:cover;background:#bcc8e6}
+.code{padding:20px 22px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86rem;line-height:1.8;background:var(--ink);color:#C9D6F5}
+.code .k{color:#7FA6FF}
+.code .s{color:#6FE0D2}
+.code .c{color:#7885A8}
+
+/* sections */
+section{padding:84px 0}
+.tint{background:var(--bg)}
+.sec-head{max-width:700px;margin-bottom:44px}
+.sec-head h2{font-size:clamp(2rem,3.6vw,2.7rem);margin-bottom:14px}
+.sec-head p{color:var(--muted)}
+
+/* intro */
+.intro{display:grid;grid-template-columns:.85fr 1.15fr;gap:64px;align-items:start}
+.intro h2{font-size:clamp(2rem,3.4vw,2.6rem)}
+.intro p{margin-bottom:20px;color:var(--muted)}
+
+/* software types */
+.types{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.ty{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px}
+.ty .ic{width:50px;height:50px;border-radius:12px;background:var(--blue);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.ty:nth-child(2) .ic{background:var(--cyan)}
+.ty:nth-child(3) .ic{background:var(--ink)}
+.ty:nth-child(4) .ic{background:#6A5BE0}
+.ty h3{font-size:1.2rem;margin-bottom:8px}
+.ty p{font-size:.96rem;color:var(--muted);line-height:1.65}
+
+/* split */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.split.flip .pic{order:2}
+.pic{border-radius:var(--radius);overflow:hidden;background:#bcc8e6}
+.pic img{width:100%;height:100%;min-height:440px;object-fit:cover}
+.split h2{font-size:clamp(1.9rem,3.2vw,2.5rem);margin-bottom:18px}
+.split p{color:var(--muted);margin-bottom:18px}
+
+/* lifecycle */
+.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:0}
+.fl{position:relative;padding:26px 18px 6px 0}
+.fl::before{content:"";position:absolute;top:12px;left:0;right:0;height:3px;background:var(--line)}
+.fl::after{content:"";position:absolute;top:5px;left:0;width:17px;height:17px;border-radius:50%;background:var(--blue);border:4px solid var(--white)}
+.fl:nth-child(even)::after{background:var(--cyan)}
+.fl h3{font-size:1.05rem;margin:14px 0 6px}
+.fl p{font-size:.92rem;color:var(--muted);line-height:1.6}
+
+/* safe computing */
+.safe{display:grid;grid-template-columns:1fr 1fr;gap:0 48px}
+.safe div{padding:20px 0 20px 42px;border-bottom:1px solid var(--line);position:relative}
+.safe div::before{content:"";position:absolute;left:4px;top:30px;width:14px;height:7px;border-left:3px solid var(--cyan);border-bottom:3px solid var(--cyan);transform:rotate(-45deg)}
+.safe h3{font-size:1.1rem;margin-bottom:4px}
+.safe p{color:var(--muted);font-size:.96rem}
+
+/* glossary table */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:#fff}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th,td{text-align:left;padding:16px 20px;border-bottom:1px solid var(--line);font-size:.96rem;vertical-align:top}
+th{background:var(--ink);color:#fff;font-weight:600}
+tr:last-child td{border-bottom:none}
+td:first-child{font-weight:600;color:var(--blue-d);font-family:'Sora',sans-serif}
+
+/* criteria */
+.crit{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.cr{background:var(--white);border-radius:var(--radius);padding:30px 28px;border-top:4px solid var(--blue)}
+.cr:nth-child(2){border-top-color:var(--cyan)}
+.cr:nth-child(3){border-top-color:var(--ink)}
+.cr h3{font-size:1.3rem;margin-bottom:10px}
+.cr p{color:var(--muted);font-size:.98rem}
+
+/* gallery */
+.gal{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:16px}
+.gal figure{margin:0}
+.gal .ph{border-radius:var(--radius);overflow:hidden;background:#bcc8e6}
+.gal img{width:100%;height:280px;object-fit:cover}
+.gal figcaption{font-size:.92rem;color:var(--muted);padding-top:10px}
+
+/* faq */
+details{border-bottom:1px solid var(--line);padding:20px 0}
+summary{cursor:pointer;font-weight:600;font-size:1.06rem;list-style:none;display:flex;justify-content:space-between;gap:20px;color:var(--ink)}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:1.5rem;line-height:1;color:var(--blue)}
+details[open] summary::after{content:"\2212"}
+details p{margin-top:14px;color:var(--muted)}
+
+/* ad slots */
+.ad-slot{width:100%;max-width:1200px;margin:0 auto;padding:30px 28px;min-height:120px;text-align:center}
+
+/* disclaimer */
+.disclaimer{background:var(--bg);border:1px solid var(--line);border-left:5px solid var(--blue);border-radius:var(--radius);padding:32px 36px}
+.disclaimer h3{font-size:1.35rem;margin-bottom:12px}
+.disclaimer p{color:var(--muted);font-size:.96rem;margin-bottom:10px}
+
+/* footer */
+footer{background:var(--ink);color:#A9B5D3;padding:56px 0 32px}
+.foot{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;margin-bottom:32px}
+footer .brand,footer .brand span{color:#fff}
+.foot p{max-width:420px;font-size:.95rem;margin-top:14px}
+.foot ul{list-style:none}
+.foot li{margin-bottom:10px}
+.foot a{color:#fff;text-decoration:none}
+.foot a:hover{text-decoration:underline}
+.copy{border-top:1px solid rgba(255,255,255,.14);padding-top:20px;font-size:.88rem}
+
+@media(max-width:960px){
+  nav{display:none}
+  .hero-grid,.intro,.split{grid-template-columns:1fr;gap:36px}
+  .split.flip .pic{order:0}
+  .types{grid-template-columns:1fr 1fr}
+  .flow{grid-template-columns:1fr 1fr;row-gap:12px}
+  .safe,.crit,.gal{grid-template-columns:1fr}
+  .gal img{height:240px}
+  .pic img{min-height:300px}
+  .btn.out{margin:14px 0 0}
+  section{padding:58px 0}
+}
+@media(max-width:560px){.types,.flow{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#top" aria-label="Softiva home">
+      <svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#2B5CE6"/><path d="M14 14l-6 6 6 6M26 14l6 6-6 6" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 11l-4 18" stroke="#19B5C9" stroke-width="2.8" stroke-linecap="round"/></svg>
+      <span>Softiva</span>
+    </a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#types">Software types</a></li>
+        <li><a href="#made">How it's made</a></li>
+        <li><a href="#safe">Safe computing</a></li>
+        <li><a href="#faq">Questions</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <h1>Software, explained in <em>plain language</em>.</h1>
+      <p>Softiva is an independent reading space about software. We explain how apps and operating systems work, how software gets built and which simple habits keep everyday computing smooth and safe.</p>
+      <a class="btn" href="#about">Start reading</a>
+      <a class="btn out" href="#safe">Safe computing</a>
+    </div>
+    <div class="win" role="img" aria-label="Illustration of a software window with code and a developer workspace photo">
+      <div class="win-bar"><i></i><i></i><i></i><span>readme.txt</span></div>
+      <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1000&q=80" alt="Laptop screen showing lines of program code" loading="eager">
+      <div class="code">
+        <div><span class="c">// how software works, in short</span></div>
+        <div><span class="k">function</span> useApp(request) {</div>
+        <div>&nbsp;&nbsp;<span class="k">const</span> result = process(request);</div>
+        <div>&nbsp;&nbsp;<span class="k">return</span> <span class="s">"a response you can see"</span>;</div>
+        <div>}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<section id="about">
+  <div class="wrap intro">
+    <h2>Why Softiva exists</h2>
+    <div>
+      <p>We use software from the moment we wake up: alarms, messages, maps, banking, streaming, documents. Yet most people have only a vague idea of how it works, and technical jargon often makes it feel harder than it needs to be.</p>
+      <p>Softiva was created to remove that barrier. Each article explains one idea in everyday language, such as what an operating system actually does, why updates matter, or how a simple app goes from idea to something you can use.</p>
+      <p>We do not sell, distribute or recommend specific programs. Our goal is to build general understanding, so that you feel more confident, ask better questions and make careful decisions about the technology you use every day.</p>
+    </div>
+  </div>
+</section>
+
+<div class="ad-slot">
+  <!-- Google ad unit 1: paste your ad code here -->
+  <!--
+  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="1111111111" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  -->
+</div>
+
+<!-- TYPES -->
+<section id="types" class="tint" style="padding-top:60px">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Four kinds of software you meet every day</h2>
+      <p>Software comes in many forms. These four groups cover most of what ordinary users come across.</p>
+    </div>
+    <div class="types">
+      <div class="ty">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div>
+        <h3>Operating systems</h3>
+        <p>The base layer that manages your device, connects hardware to programs and lets everything else run.</p>
+      </div>
+      <div class="ty">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+        <h3>Applications</h3>
+        <p>Programs built for tasks such as writing, messaging, editing photos, managing money or playing media.</p>
+      </div>
+      <div class="ty">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></div>
+        <h3>Web software</h3>
+        <p>Tools you use through a browser, so nothing needs to be installed and your work follows you across devices.</p>
+      </div>
+      <div class="ty">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.5-8A6 6 0 0 1 18 8.5a4.5 4.5 0 0 1-.5 9.5H7z"/></svg></div>
+        <h3>Cloud services</h3>
+        <p>Software and storage that run on remote computers, letting you save, sync and share files over the internet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLE 1 -->
+<section>
+  <div class="wrap split">
+    <div class="pic"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=900&q=80" alt="Monitor displaying program code in a dark theme" loading="lazy"></div>
+    <div>
+      <h2>What actually happens when you open an app</h2>
+      <p>When you tap an icon, a surprising amount happens in a fraction of a second. The operating system finds the program, gives it some memory and processing time and shows its window or screen. The app then reads your settings, draws its interface and waits for you to do something.</p>
+      <p>Each click or tap is turned into an instruction. The software processes it, perhaps asks a remote server for information, and displays the result. All of this relies on layers of code written by many people, each layer handling one small piece of the job.</p>
+      <p>Understanding this simple chain helps explain everyday experiences, such as why apps slow down when memory is full, why you sometimes need an internet connection, and why restarting a device can fix odd behaviour.</p>
+    </div>
+  </div>
+</section>
+
+<!-- LIFECYCLE -->
+<section id="made" class="tint">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>How software is made</h2>
+      <p>Building software is a team effort that follows a loose cycle. Real projects repeat these stages many times as products improve.</p>
+    </div>
+    <div class="flow">
+      <div class="fl"><h3>Plan</h3><p>Decide what problem the software should solve and for whom.</p></div>
+      <div class="fl"><h3>Design</h3><p>Sketch how it will look, feel and be organised.</p></div>
+      <div class="fl"><h3>Build</h3><p>Developers write the code that makes each feature work.</p></div>
+      <div class="fl"><h3>Test</h3><p>Testers look for bugs, slow spots and confusing steps.</p></div>
+      <div class="fl"><h3>Release</h3><p>The finished version is made available to users.</p></div>
+      <div class="fl"><h3>Maintain</h3><p>Updates fix problems, add features and improve security.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- GLOSSARY -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Common terms, decoded</h2>
+      <p>A short glossary of words you will often see in articles and update notes.</p>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Term</th><th>Plain meaning</th><th>Everyday example</th></tr></thead>
+        <tbody>
+          <tr><td>Bug</td><td>A mistake in software that causes unexpected behaviour</td><td>A button that does nothing when pressed</td></tr>
+          <tr><td>Patch</td><td>A small update that fixes a specific problem</td><td>A fix released after a security issue is found</td></tr>
+          <tr><td>API</td><td>A set of rules that lets two programs talk to each other</td><td>A weather app asking a service for today's forecast</td></tr>
+          <tr><td>Open source</td><td>Software whose code anyone can read and, depending on the licence, reuse</td><td>Community-built tools used by many organisations</td></tr>
+          <tr><td>Cloud</td><td>Computing and storage provided over the internet</td><td>Photos that sync between your phone and laptop</td></tr>
+          <tr><td>Interface</td><td>The part of software you see and interact with</td><td>Menus, buttons and screens</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SAFE COMPUTING -->
+<section id="safe" class="tint">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Simple habits for safer computing</h2>
+      <p>Good security is mostly small, regular habits. These are general, widely recommended practices for everyday users.</p>
+    </div>
+    <div class="safe">
+      <div><h3>Keep software updated</h3><p>Updates often include security fixes. Turning on automatic updates, where available, is an easy habit.</p></div>
+      <div><h3>Use strong, unique passwords</h3><p>Avoid reusing passwords. A reputable password manager can help you keep long, different ones for each account.</p></div>
+      <div><h3>Turn on two-step sign-in</h3><p>An extra verification step makes it much harder for others to access your accounts.</p></div>
+      <div><h3>Back up important files</h3><p>Keep copies of valuable documents and photos in more than one place so one failure does not erase them.</p></div>
+      <div><h3>Be careful with links and attachments</h3><p>Unexpected messages asking for urgent action are a common trick. Pause and verify before clicking.</p></div>
+      <div><h3>Install from trusted sources</h3><p>Use official stores and the publisher's own website, and avoid unofficial or pirated copies.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CRITERIA -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Thinking carefully about any software you use</h2>
+      <p>Before trusting a new tool with your time or information, a few questions go a long way.</p>
+    </div>
+    <div class="crit">
+      <div class="cr"><h3>What does it need?</h3><p>Check which permissions and data an app requests, and whether that matches what it does.</p></div>
+      <div class="cr"><h3>Who makes it?</h3><p>Look for a clear publisher, regular updates and a readable privacy policy.</p></div>
+      <div class="cr"><h3>Does it fit my needs?</h3><p>Simple tools that do exactly what you need are often better than complicated ones with unused features.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLE 2 -->
+<section class="tint">
+  <div class="wrap split flip">
+    <div class="pic"><img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80" alt="Rows of servers in a data centre" loading="lazy"></div>
+    <div>
+      <h2>What "the cloud" really is</h2>
+      <p>The cloud sounds mysterious, but it is simply other people's computers, kept in large facilities and connected through the internet. When you save a file to a cloud service, a copy is stored on these machines instead of, or as well as, on your own device.</p>
+      <p>This is why you can open the same document on a phone and a laptop, or recover files if a device is lost. It also means your data travels over a network and lives somewhere else, so choosing providers carefully and protecting your accounts is important.</p>
+      <p>Understanding this helps you decide what to store online, what to keep offline and how to keep a sensible backup of the things that matter most.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Behind the screen</h2>
+      <p>Software is made by people, in everyday workspaces, one careful step at a time.</p>
+    </div>
+    <div class="gal">
+      <figure><div class="ph"><img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?auto=format&fit=crop&w=900&q=80" alt="Team collaborating around laptops" loading="lazy"></div><figcaption>Good software is built through teamwork.</figcaption></figure>
+      <figure><div class="ph"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=700&q=80" alt="Digital security concept with a lock on a screen" loading="lazy"></div><figcaption>Security starts with small habits.</figcaption></figure>
+      <figure><div class="ph"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=700&q=80" alt="Close up of a computer circuit board" loading="lazy"></div><figcaption>Software runs on carefully built hardware.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<div class="ad-slot">
+  <!-- Google ad unit 2: paste your ad code here -->
+  <!--
+  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="2222222222" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  -->
+</div>
+
+<!-- FAQ -->
+<section id="faq" class="tint">
+  <div class="wrap narrow">
+    <div class="sec-head"><h2>Common questions</h2></div>
+    <details>
+      <summary>Does Softiva sell or distribute software?</summary>
+      <p>No. Softiva is an informational website. We do not sell, host or distribute software, apps, licences or downloads, and we do not provide technical support. The pages are written only to share general knowledge.</p>
+    </details>
+    <details>
+      <summary>Why do devices keep asking me to update?</summary>
+      <p>Updates usually fix bugs, close security gaps and sometimes add features. Installing them promptly keeps your device more stable and better protected.</p>
+    </details>
+    <details>
+      <summary>What is the difference between a program and an app?</summary>
+      <p>The terms overlap. People often say app for software on phones and tablets, and program for software on computers, but both describe software designed for a specific task.</p>
+    </details>
+    <details>
+      <summary>Is free software safe?</summary>
+      <p>It can be, but not always. Stick to trusted publishers and official sources, read what permissions are requested and be cautious of anything that seems too good to be true.</p>
+    </details>
+    <details>
+      <summary>My device is running slowly. What can I try?</summary>
+      <p>Restarting, closing unused apps, freeing up storage and installing pending updates are good first steps. If problems continue, consult the device maker's support or a qualified technician.</p>
+    </details>
+  </div>
+</section>
+
+<!-- DISCLAIMER -->
+<section>
+  <div class="wrap narrow">
+    <div class="disclaimer" role="note">
+      <h3>Disclaimer</h3>
+      <p>The content on Softiva is provided for general informational and educational purposes only. It reflects common observations about software and computing and should not be treated as professional IT, cybersecurity, legal or technical support advice.</p>
+      <p>Technology changes quickly and every device and setup is different. Before making changes to important systems or data, consult official documentation or a qualified professional, and always keep backups. Product names, if mentioned, belong to their respective owners, and mention of any term does not imply endorsement. Images are used for illustration only and do not represent or endorse any specific product, brand or service.</p>
+      <p>Softiva does not sell, host or distribute software or services and makes no guarantees about results from applying the ideas shared here. Any decision you make is your own responsibility. Third-party advertising may appear on this site, and we are not responsible for the content of external advertisers.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="#top" aria-label="Softiva home">
+          <svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#fff"/><path d="M14 14l-6 6 6 6M26 14l6 6-6 6" fill="none" stroke="#2B5CE6" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 11l-4 18" stroke="#19B5C9" stroke-width="2.8" stroke-linecap="round"/></svg>
+          <span>Softiva</span>
+        </a>
+        <p>An independent reading space about software, safe computing and everyday digital skills.</p>
+      </div>
+      <ul>
+        <li><a href="privacy.html">Privacy Policy</a></li>
+        <li><a href="terms.html">Terms &amp; Conditions</a></li>
+      </ul>
+    </div>
+    <div class="copy">&copy; 2026 Softiva. All rights reserved.</div>
+  </div>
+</footer>
+
+</body>
+</html>
